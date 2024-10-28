@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { useState, useEffect } from 'react';
 import { Slider } from './ui/Slider';
 import { Select } from './ui/Select';
@@ -9,9 +8,9 @@ interface PlanCustomizerProps {
 }
 
 export const PlanCustomizer: React.FC<PlanCustomizerProps> = ({
-                                                                  basePrice = 320,
-                                                                  onPriceChange
-                                                              }) => {
+    basePrice = 320,
+    onPriceChange
+}) => {
     const [validity, setValidity] = useState(30);
     const [internetData, setInternetData] = useState(100);
     const [currency, setCurrency] = useState('USD');
@@ -20,17 +19,30 @@ export const PlanCustomizer: React.FC<PlanCustomizerProps> = ({
     const validityMultiplier = 2;
     const internetMultiplier = 0.5;
 
+    const currencyRates = {
+        USD: 1,
+        EUR: 0.91,
+        GBP: 0.79
+    };
+
     useEffect(() => {
-        const newPrice = basePrice +
+        const baseCalculation = basePrice +
             (validity - 30) * validityMultiplier +
             (internetData - 100) * internetMultiplier;
-
-        setFinalPrice(Number(newPrice.toFixed(2)));
-        onPriceChange?.(newPrice);
-    }, [validity, internetData, basePrice, onPriceChange]);
+        
+        const convertedPrice = baseCalculation * currencyRates[currency as keyof typeof currencyRates];
+        const roundedPrice = Number(convertedPrice.toFixed(2));
+        
+        setFinalPrice(roundedPrice);
+        onPriceChange?.(roundedPrice);
+    }, [validity, internetData, basePrice, currency, onPriceChange]);
 
     const formatDataSize = (value: number) => {
-        return value >= 1000 ? `${(value / 1000).toFixed(1)} TB` : `${value} GB`;
+        if (value >= 1000) {
+            const tb = value / 1000;
+            return `${tb.toFixed(1)} TB`;
+        }
+        return `${value} GB`;
     };
 
     const getCurrencySymbol = (curr: string) => {
@@ -119,7 +131,7 @@ export const PlanCustomizer: React.FC<PlanCustomizerProps> = ({
                                 max="100000"
                                 className="w-20 px-2 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                             />
-                            <span className="text-sm font-medium text-purple-600">GB</span>
+                            <span className="text-sm font-medium text-purple-600">{internetData >= 1000 ? 'TB' : 'GB'}</span>
                         </div>
                     </div>
                     <Slider
@@ -130,9 +142,9 @@ export const PlanCustomizer: React.FC<PlanCustomizerProps> = ({
                         step={1}
                     />
                     <div className="flex justify-between text-sm text-gray-600">
-                        <span>1 GB</span>
-                        <span>100.0 GB</span>
-                        <span>100 TB</span>
+                        <span>{formatDataSize(1)}</span>
+                        <span>{formatDataSize(1000)}</span>
+                        <span>{formatDataSize(100000)}</span>
                     </div>
                 </div>
 

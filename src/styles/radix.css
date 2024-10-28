@@ -1,0 +1,31 @@
+@layer components {
+  /* Select styles */
+  .SelectTrigger {
+    @apply flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .SelectContent {
+    @apply relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-white text-gray-700 shadow-md animate-in fade-in-80;
+  }
+
+  .SelectItem {
+    @apply relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-purple-100 focus:text-purple-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50;
+  }
+
+  /* Slider styles */
+  .SliderRoot {
+    @apply relative flex w-full touch-none select-none items-center;
+  }
+
+  .SliderTrack {
+    @apply relative h-2 w-full grow overflow-hidden rounded-full bg-gray-200;
+  }
+
+  .SliderRange {
+    @apply absolute h-full bg-purple-600;
+  }
+
+  .SliderThumb {
+    @apply block h-5 w-5 rounded-full border-2 border-purple-600 bg-white ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+}
